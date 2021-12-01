@@ -2,7 +2,7 @@
 
 
     <div class="row">
-        <div class="col-6 offset-3">
+        <div class="col-6">
             <div class="card mb-3">
                 <img src="<%= campground.image %> " class="card-img-top" alt="camp image">
                 <div class="card-body">
@@ -17,7 +17,7 @@
                     <li class="list-group-item text-muted">
                         <%= campground.location %>
                     </li>
-                    <li class="list-group-item">$ <%= campground.price %>/per night </li>
+                    <li class="list-group-item">$<%= campground.price %>/per night </li>
                 </ul>
                 <div class="card-body">
                     <a href="/campgrounds/<%=campground._id%>/edit" class="card-link btn btn-primary">Edit</a>
@@ -26,17 +26,60 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <div class="col-6 ml-5">
             <h2>Leave review</h2>
-            <form action="/campgrounds/<%=campground._id%>/reviews" method="post">
+            <form action="/campgrounds/<%=campground._id%>/reviews" method="post" novalidate class='needs-validation'>
                 <div class="mb-3">
                     <label class="form-label" for="rating">Rating</label>
-                    <input class="form-range" type="range" name="review[rating]" id="rating" min='0' max='5' value="0">
+                    <input class="form-range" type="range" name="review[rating]" required id="rating" min='0' max='5'
+                        value="0">
                 </div>
                 <div class='mb-3'>
                     <label class="form-label" for="body">Review</label>
-                    <textarea class="form-control" name="review[body]" id="body" cols="30" rows="3"></textarea>
+                    <textarea class="form-control" name="review[body]" required id="body" cols="30" rows="3"></textarea>
                 </div>
                 <button class="btn btn-success">Submit</button>
             </form>
+            <div class='mb-5'>
+                <%for(let review of campground.reviews){%>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Rating: <%=review.rating%>/5</h5>
+                            <p class="card-text">
+                                <%= review.body %>
+                            </p>
+                            <form class="d-inline"
+                                action="/campgrounds/<%= campground._id %>/<%= review._id %>?_method=DELETE"
+                                method="post">
+                                <button class='btn btn-danger'>Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    <%}%>
+            </div>
         </div>
     </div>
+
+    <script>
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
