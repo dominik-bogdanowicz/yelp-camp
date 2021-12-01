@@ -18,7 +18,7 @@ const CampgorundSchema = new Schema({
 // Mongoose middleware, runs when 'findOneAndDelete' is called on Campground model
 CampgorundSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {                        //if campground exists
-        await Review.remove({         //remove review object
+        await Review.deleteMany({         //remove review object
             _id: {                    //where id
                 $in: doc.reviews      //is somewhere in reviews array
             }
