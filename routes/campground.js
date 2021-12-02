@@ -1,5 +1,19 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
+const Campground = require('../models/campground');
+const catchAsync = require('../utils/catchAsync');
+const campgroundJoiSchema = require('../utils/campgroundJoiSchema');
+
+
+const validateCampground = (req, res, next) => {
+    const { error } = campgroundJoiSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',');
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
 
 router.get('/', catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
