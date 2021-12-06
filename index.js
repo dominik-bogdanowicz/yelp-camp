@@ -33,6 +33,7 @@ app.engine('ejs', ejsMate);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+app.use(express.static('public'));
 
 const sessionConfig = {
     secret: 'thisWillBeSecret',
@@ -61,7 +62,8 @@ app.use((req, res, next) => {
 
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
-app.use(express.static('public'));
+app.use("/user", userRoutes);
+
 
 
 
